@@ -1,0 +1,35 @@
+#include <stdio.h>
+#define MAX 100
+void NhapMang(int *a, int *n) {
+    printf("Moi ban nhap so luong phan tu: ");
+    scanf("%d", n);
+    for (int i = 0; i < *n; i++) {
+        printf("Phan tu %d: ", i);
+        scanf("%d", &a[i]);
+    }
+}
+int KiemTraChanLe(int *a, int n) {
+    for (int i = 1; i < n; i++) {
+        if ((a[i] % 2) == (a[i - 1] % 2)) return 0;
+    }
+    return 1;
+}
+int KiemTraToanChan(int *a, int n) {
+    for (int i = 0; i < n; i++) {
+        if (a[i] % 2 != 0) return 0;
+    }
+    return 1;
+}
+int main() {
+    int a[MAX], n;
+    NhapMang(a, &n);
+    if (KiemTraChanLe(a, n))
+        printf("+ Day co tinh chat chan le\n");
+    else
+        printf("+ Day khong co tinh chat chan le\n");
+    if (KiemTraToanChan(a, n))
+        printf("+ Day co tinh chat toan chan\n");
+    else
+        printf("+ Day khong co tinh chat toan chan\n");
+    return 0;
+}

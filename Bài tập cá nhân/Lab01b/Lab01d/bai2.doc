@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 1000
+
+void XoaKyTuTaiViTri(char *s, int k) {
+    int len = strlen(s);
+    if (k < 0 || k >= len) {
+        return;
+    }
+    for (int i = k; i < len; i++) {
+        s[i] = s[i + 1];
+    }
+}
+
+int main() {
+    char s[MAX + 1];
+    int k;
+
+    printf("Moi ban nhap chuoi s: ");
+    fgets(s, MAX, stdin);
+    s[strcspn(s, "\n")] = '\0';
+
+    printf("Moi ban nhap vi tri can xoa: ");
+    scanf("%d", &k);
+
+    XoaKyTuTaiViTri(s, k);
+
+    printf("Chuoi sau khi xoa ky tu tai vi tri %d: %s\n", k, s);
+
+    return 0;
+}

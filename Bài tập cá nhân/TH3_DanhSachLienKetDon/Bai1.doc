@@ -1,0 +1,114 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class ListInt {
+private:
+    Node* head;
+
+public:
+    ListInt() { head = nullptr; }
+    ~ListInt();
+    void add(int gia_tri);
+    void remove(int gia_tri);
+    void appendList(ListInt& danh_sach_khac);
+    void display();
+};
+
+ListInt::~ListInt() {
+    Node* tam;
+    while (head) {
+        tam = head;
+        head = head->next;
+        delete tam;
+    }
+}
+
+void ListInt::add(int gia_tri) {
+    Node* nut_moi = new Node{gia_tri, nullptr};
+    if (!head) {
+        head = nut_moi;
+    } else {
+        Node* tam = head;
+        while (tam->next) {
+            tam = tam->next;
+        }
+        tam->next = nut_moi;
+    }
+}
+
+void ListInt::remove(int gia_tri) {
+    if (!head) return;
+    Node* tam = head;
+    Node* truoc = nullptr;
+    while (tam && tam->data != gia_tri) {
+        truoc = tam;
+        tam = tam->next;
+    }
+    if (!tam) return;
+    if (!truoc) {
+        head = head->next;
+    } else {
+        truoc->next = tam->next;
+    }
+    delete tam;
+}
+
+void ListInt::appendList(ListInt& danh_sach_khac) {
+    if (!danh_sach_khac.head) return;
+    if (!head) {
+        head = danh_sach_khac.head;
+    } else {
+        Node* tam = head;
+        while (tam->next) {
+            tam = tam->next;
+        }
+        tam->next = danh_sach_khac.head;
+    }
+    danh_sach_khac.head = nullptr;
+}
+
+void ListInt::display() {
+    Node* tam = head;
+    while (tam) {
+        cout << tam->data << " ";
+        tam = tam->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    ListInt danh_sach_1, danh_sach_2;
+    int so, k;
+
+    cout << "Nhap 10 so nguyen: ";
+    for (int i = 0; i < 10; i++) {
+        cin >> so;
+        danh_sach_1.add(so);
+    }
+    cout << "Danh sach 1: ";
+    danh_sach_1.display();
+
+    cout << "Nhap so can xoa: ";
+    cin >> k;
+    danh_sach_1.remove(k);
+    cout << "Danh sach sau khi xoa: ";
+    danh_sach_1.display();
+
+    cout << "Nhap 5 so nguyen vao danh sach thu hai: ";
+    for (int i = 0; i < 5; i++) {
+        cin >> so;
+        danh_sach_2.add(so);
+    }
+
+    danh_sach_1.appendList(danh_sach_2);
+    cout << "Danh sach sau khi gop: ";
+    danh_sach_1.display();
+
+    return 0;
+}
+s

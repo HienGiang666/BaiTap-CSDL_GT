@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void timPhanTuChung() {
+    int nx, ny, nz;
+    scanf("%d", &nx);
+    int* x = (int*)malloc(nx * sizeof(int));
+    for (int i = 0; i < nx; i++) {
+        scanf("%d", &x[i]);
+    }
+
+    scanf("%d", &ny);
+    int* y = (int*)malloc(ny * sizeof(int));
+    for (int i = 0; i < ny; i++) {
+        scanf("%d", &y[i]);
+    }
+
+    scanf("%d", &nz);
+    int* z = (int*)malloc(nz * sizeof(int));
+    for (int i = 0; i < nz; i++) {
+        scanf("%d", &z[i]);
+    }
+
+    int common[1000], count = 0;
+    for (int i = 0; i < nx; i++) {
+        for (int j = 0; j < ny; j++) {
+            if (x[i] == y[j]) {
+                for (int k = 0; k < nz; k++) {
+                    if (x[i] == z[k]) {
+                        int found = 0;
+                        for (int l = 0; l < count; l++) {
+                            if (common[l] == x[i]) {
+                                found = 1;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            common[count++] = x[i];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (count == 0) {
+        printf("0\n");
+    } else {
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = i + 1; j < count; j++) {
+                if (common[i] > common[j]) {
+                    int temp = common[i];
+                    common[i] = common[j];
+                    common[j] = temp;
+                }
+            }
+        }
+        printf("%d\n", count);
+        for (int i = 0; i < count; i++) {
+            printf("%d ", common[i]);
+        }
+        printf("\n");
+    }
+
+    free(x);
+    free(y);
+    free(z);
+}
+
+int main() {
+    printf("Nhap cac day so de tim phan tu chung:\n");
+    timPhanTuChung();
+    return 0;
+}

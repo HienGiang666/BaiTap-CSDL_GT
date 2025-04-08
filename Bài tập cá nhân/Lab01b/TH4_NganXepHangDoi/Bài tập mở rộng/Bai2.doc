@@ -1,0 +1,97 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+using namespace std;
+
+struct Point {
+    int x, y;
+};
+
+const int dx[] = {-1, 1, 0, 0}; 
+const int dy[] = {0, 0, -1, 1};
+
+bool isValid(int x, int y, int N, int M, vector<vector<int>>& maze, vector<vector<bool>>& visited) {
+    return x >= 0 && x < N && y >= 0 && y < M && maze[x][y] == 0 && !visited[x][y];
+}
+
+// BFS - Hang doi
+vector<Point> findPathBFS(vector<vector<int>>& maze, int N, int M, Point start, Point end) {
+    queue<Point> q;
+    vector<vector<Point>> parent(N, vector<Point>(M, {-1, -1}));
+    vector<vector<bool>> visited(N, vector<bool>(M, false));
+    q.push(start);
+    visited[start.x][start.y] = true;
+    
+    while (!q.empty()) {
+        Point p = q.front(); q.pop();
+        if (p.x == end.x && p.y == end.y) break;
+        
+        for (int i = 0; i < 4; i++) {
+            int nx = p.x + dx[i], ny = p.y + dy[i];
+            if (isValid(nx, ny, N, M, maze, visited)) {
+                q.push({nx, ny});
+                visited[nx][ny] = true;
+                parent[nx][ny] = p;
+            }
+        }
+    }
+    
+    vector<Point> path;
+    if (!visited[end.x][end.y]) return path;
+    for (Point p = end; p.x != -1; p = parent[p.x][p.y])
+        path.push_back(p);
+    reverse(path.begin(), path.end());
+    return path;
+}
+
+// DFS - Ngan xep
+vector<Point> findPathDFS(vector<vector<int>>& maze, int N, int M, Point start, Point end) {
+    stack<Point> s;
+    vector<vector<Point>> parent(N, vector<Point>(M, {-1, -1}));
+    vector<vector<bool>> visited(N, vector<bool>(M, false));
+    s.push(start);
+    visited[start.x][start.y] = true;
+    
+    while (!s.empty()) {
+        Point p = s.top(); s.pop();
+        if (p.x == end.x && p.y == end.y) break;
+        
+        for (int i = 0; i < 4; i++) {
+            int nx = p.x + dx[i], ny = p.y + dy[i];
+            if (isValid(nx, ny, N, M, maze, visited)) {
+                s.push({nx, ny});
+                visited[nx][ny] = true;
+                parent[nx][ny] = p;
+            }
+        }
+    }
+    
+    vector<Point> path;
+    if (!visited[end.x][end.y]) return path;
+    for (Point p = end; p.x != -1; p = parent[p.x][p.y])
+        path.push_back(p);
+    reverse(path.begin(), path.end());
+    return path;
+}
+
+int main() {
+    int N, M, x0, y0, x1, y1;
+    cin >> N >> M >> x0 >> y0 >> x1 >> y1;
+    vector<vector<int>> maze(N, vector<int>(M));
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < M; j++)
+            cin >> maze[i][j];
+    
+    Point start = {x0, y0}, end = {x1, y1};
+    
+    vector<Point> path = findPathBFS(maze, N, M, start, end);
+    if (path.empty()) {
+        cout << "0\n";
+    } else {
+        cout << path.size() << "\n";
+        for (Point p : path)
+            cout << p.x << " " << p.y << "\n";
+    }
+    return 0;
+}

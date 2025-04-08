@@ -1,0 +1,178 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+// (a) Cai dat StackInt su dung mang
+class StackInt {
+private:
+    int* arr;
+    int top;
+    int capacity;
+public:
+    StackInt(int size = 100) {
+        arr = new int[size];
+        capacity = size;
+        top = -1;
+    }
+    ~StackInt() { delete[] arr; }
+    void PushStack(int x) {
+        if (IsFull()) return;
+        arr[++top] = x;
+    }
+    int PopStack() {
+        if (IsEmpty()) return -1;
+        return arr[top--];
+    }
+    int PeekStack() {
+        if (IsEmpty()) return -1;
+        return arr[top];
+    }
+    bool IsEmpty() { return top == -1; }
+    bool IsFull() { return top == capacity - 1; }
+    void Clear() { top = -1; }
+};
+
+// (a) Cai dat LinkedStackInt su dung danh sach lien ket
+struct Node {
+    int data;
+    Node* next;
+    Node(int x) : data(x), next(nullptr) {}
+};
+
+class LinkedStackInt {
+private:
+    Node* top;
+public:
+    LinkedStackInt() : top(nullptr) {}
+    ~LinkedStackInt() { Clear(); }
+    void PushStack(int x) {
+        Node* newNode = new Node(x);
+        newNode->next = top;
+        top = newNode;
+    }
+    int PopStack() {
+        if (IsEmpty()) return -1;
+        int value = top->data;
+        Node* temp = top;
+        top = top->next;
+        delete temp;
+        return value;
+    }
+    int PeekStack() {
+        if (IsEmpty()) return -1;
+        return top->data;
+    }
+    bool IsEmpty() { return top == nullptr; }
+    void Clear() {
+        while (!IsEmpty()) PopStack();
+    }
+};
+
+// (b) Dao so nguyen
+int ReverseNumber(int n) {
+    stack<int> s;
+    while (n > 0) {
+        s.push(n % 10);
+        n /= 10;
+    }
+    int reversed = 0;
+    while (!s.empty()) {
+        reversed = reversed * 10 + s.top();
+        s.pop();
+    }
+    return reversed;
+}
+
+// (c) Kiem tra xau doi xung
+bool IsPalindrome(const string& str) {
+    stack<char> s;
+    for (char c : str) s.push(c);
+    for (char c : str) {
+        if (c != s.top()) return false;
+        s.pop();
+    }
+    return true;
+}
+
+// (d) Doi so thap phan sang nhi phan
+string DecimalToBinary(int n) {
+    stack<int> s;
+    while (n > 0) {
+        s.push(n % 2);
+        n /= 2;
+    }
+    string binary = "";
+    while (!s.empty()) {
+        binary += to_string(s.top());
+        s.pop();
+    }
+    return binary;
+}
+
+// (e) Chuyen bieu thuc trung to sang hau to (Infix to Postfix)
+int GetPrecedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+string InfixToPostfix(const string& infix) {
+    stack<char> s;
+    string postfix = "";
+    for (char c : infix) {
+        if (isdigit(c)) postfix += c;
+        else if (c == '(') s.push(c);
+        else if (c == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix += s.top();
+                s.pop();
+            }
+            s.pop();
+        }
+        else {
+            while (!s.empty() && GetPrecedence(s.top()) >= GetPrecedence(c)) {
+                postfix += s.top();
+                s.pop();
+            }
+            s.push(c);
+        }
+    }
+    while (!s.empty()) {
+        postfix += s.top();
+        s.pop();
+    }
+    return postfix;
+}
+
+// (e) Tinh gia tri bieu thuc hau to
+int EvaluatePostfix(const string& postfix) {
+    stack<int> s;
+    for (char c : postfix) {
+        if (isdigit(c)) s.push(c - '0');
+        else {
+            int b = s.top(); s.pop();
+            int a = s.top(); s.pop();
+            switch (c) {
+                case '+': s.push(a + b); break;
+                case '-': s.push(a - b); break;
+                case '*': s.push(a * b); break;
+                case '/': s.push(a / b); break;
+            }
+        }
+    }
+    return s.top();
+}
+
+int main() {
+    cout << "Dao so 12345: " << ReverseNumber(12345) << endl;
+    cout << "Kiem tra xau 'madam': " << (IsPalindrome("madam") ? "Doi xung" : "Khong doi xung") << endl;
+    cout << "So 10 sang nhi phan: " << DecimalToBinary(10) << endl;
+    string infix = "3+(2*4)-5";
+    string postfix = InfixToPostfix(infix);
+    cout << "Bieu thuc hau to: " << postfix << endl;
+    cout << "Gia tri bieu thuc: " << EvaluatePostfix(postfix) << endl;
+    return 0;
+}

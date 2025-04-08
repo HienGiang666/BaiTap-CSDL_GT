@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct DienThoaiTag {
+    char maDT[11];
+    char nhanHieu[21];
+    int gia;
+} DienThoai;
+
+void ThemDienThoai(DienThoai a[], int *n, DienThoai dt) {
+    if (*n >= MAX) {
+        printf("Danh sach dien thoai da day!\n");
+        return;
+    }
+    for (int i = 0; i < *n; i++) {
+        if (strcmp(a[i].maDT, dt.maDT) == 0) {
+            printf("Dien thoai da ton tai trong danh sach!\n");
+            return;
+        }
+    }
+    a[*n] = dt;
+    (*n)++;
+}
+
+void InThongTinDienThoai(DienThoai a[], int n, char maDT[]) {
+    for (int i = 0; i < n; i++) {
+        if (strcmp(a[i].maDT, maDT) == 0) {
+            printf("Nhan hieu: %s\n", a[i].nhanHieu);
+            printf("Gia: %d\n", a[i].gia);
+            return;
+        }
+    }
+    printf("Khong tim thay dien thoai co ma da cho\n");
+}
+
+void CapNhatGia(DienThoai a[], int n, char maDT[], int giaMoi) {
+    for (int i = 0; i < n; i++) {
+        if (strcmp(a[i].maDT, maDT) == 0) {
+            a[i].gia = giaMoi;
+            printf("Gia dien thoai da duoc cap nhat.\n");
+            return;
+        }
+    }
+    printf("Khong tim thay dien thoai co ma da cho\n");
+}
+
+void XoaDienThoai(DienThoai a[], int *n, char maDT[]) {
+    for (int i = 0; i < *n; i++) {
+        if (strcmp(a[i].maDT, maDT) == 0) {
+            for (int j = i; j < *n - 1; j++) {
+                a[j] = a[j + 1];
+            }
+            (*n)--;
+            printf("Dien thoai da duoc xoa.\n");
+            return;
+        }
+    }
+    printf("Khong tim thay dien thoai co ma da cho\n");
+}
+
+void XuatDanhSachDienThoai(DienThoai a[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Ma DT: %s\n", a[i].maDT);
+        printf("Nhan hieu: %s\n", a[i].nhanHieu);
+        printf("Gia: %d\n\n", a[i].gia);
+    }
+}
+
+int main() {
+    DienThoai danhSach[MAX];
+    int n = 0;
+    int luaChon;
+    
+    while (1) {
+        printf("1. Them dien thoai\n");
+        printf("2. Xem thong tin dien thoai\n");
+        printf("3. Cap nhat gia dien thoai\n");
+        printf("4. Xoa dien thoai\n");
+        printf("5. Xuat danh sach dien thoai\n");
+        printf("6. Thoat\n");
+        printf("Lua chon: ");
+        scanf("%d", &luaChon);
+        getchar(); // Đọc ký tự enter sau khi nhập số
+        
+        if (luaChon == 1) {
+            DienThoai dt;
+            printf("Nhap ma dien thoai: ");
+            gets(dt.maDT);
+            printf("Nhap nhan hieu: ");
+            gets(dt.nhanHieu);
+            printf("Nhap gia: ");
+            scanf("%d", &dt.gia);
+            getchar();
+            ThemDienThoai(danhSach, &n, dt);
+        } else if (luaChon == 2) {
+            char maDT[11];
+            printf("Nhap ma dien thoai muon xem: ");
+            gets(maDT);
+            InThongTinDienThoai(danhSach, n, maDT);
+        } else if (luaChon == 3) {
+            char maDT[11];
+            int giaMoi;
+            printf("Nhap ma dien thoai muon cap nhat gia: ");
+            gets(maDT);
+            printf("Nhap gia moi: ");
+            scanf("%d", &giaMoi);
+            CapNhatGia(danhSach, n, maDT, giaMoi);
+        } else if (luaChon == 4) {
+            char maDT[11];
+            printf("Nhap ma dien thoai muon xoa: ");
+            gets(maDT);
+            XoaDienThoai(danhSach, &n, maDT);
+        } else if (luaChon == 5) {
+            XuatDanhSachDienThoai(danhSach, n);
+        } else if (luaChon == 6) {
+            break;
+        } else {
+            printf("Lua chon khong hop le!\n");
+        }
+    }
+    return 0;
+}

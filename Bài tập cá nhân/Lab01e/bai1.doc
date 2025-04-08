@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+#define FI "DaySoNguyen.inp"
+
+void DocCacSoNguyen() {
+    FILE *fi;
+    int n;
+
+    fi = fopen(FI, "rt");
+    if (fi == NULL) {
+        printf("Khong the doc file");
+        return;
+    }
+    fscanf(fi, "%d", &n);
+    for (int i = 0; i < n; i++) {
+        int num;
+        fscanf(fi, "%d", &num);
+        printf("%d ", num);
+    }
+    fclose(fi);
+}
+
+int main() {
+    DocCacSoNguyen();
+    return 0;
+}

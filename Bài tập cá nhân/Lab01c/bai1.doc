@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_NHANVIEN 100
+
+typedef struct {
+    char MaSo[11];
+    char Ho[11];
+    char Ten[51];
+    int Phai;
+    int ThamNien;
+} NhanVien;
+
+typedef struct {
+    NhanVien aNhanVien[MAX_NHANVIEN];
+    int SoLuong;
+} PhongBan;
+
+void NhapPhongBan(PhongBan *pb) {
+    int i;
+    printf("Nhap so luong nhan vien: ");
+    scanf("%d", &pb->SoLuong);
+    getchar();
+    for(i = 0; i < pb->SoLuong; i++) {
+        printf("Nhap thong tin nhan vien thu %d:\n", i+1);
+        printf("Ma so: ");
+        fgets(pb->aNhanVien[i].MaSo, 11, stdin);
+        pb->aNhanVien[i].MaSo[strcspn(pb->aNhanVien[i].MaSo, "\n")] = 0;
+        printf("Ho: ");
+        fgets(pb->aNhanVien[i].Ho, 11, stdin);
+        pb->aNhanVien[i].Ho[strcspn(pb->aNhanVien[i].Ho, "\n")] = 0;
+        printf("Ten: ");
+        fgets(pb->aNhanVien[i].Ten, 51, stdin);
+        pb->aNhanVien[i].Ten[strcspn(pb->aNhanVien[i].Ten, "\n")] = 0;
+        printf("Phai (0: Nu, 1: Nam): ");
+        scanf("%d", &pb->aNhanVien[i].Phai);
+        printf("Tham nien: ");
+        scanf("%d", &pb->aNhanVien[i].ThamNien);
+        getchar();
+    }
+}
+
+void XuatPhongBan(PhongBan pb) {
+    printf("Danh sach nhan vien:\n");
+    for(int i = 0; i < pb.SoLuong; i++) {
+        printf("Ma so: %s, Ho: %s, Ten: %s, Phai: %d, Tham nien: %d\n", pb.aNhanVien[i].MaSo, pb.aNhanVien[i].Ho, pb.aNhanVien[i].Ten, pb.aNhanVien[i].Phai, pb.aNhanVien[i].ThamNien);
+    }
+}
+
+void DemSiSo(PhongBan ds, int *sonam, int *sonu) {
+    *sonam = *sonu = 0;
+    for(int i = 0; i < ds.SoLuong; i++) {
+        if(ds.aNhanVien[i].Phai == 1)
+            (*sonam)++;
+        else
+            (*sonu)++;
+    }
+}
+
+void SapXepTangTheoThamNien(PhongBan *pb) {
+    for(int i = 0; i < pb->SoLuong - 1; i++) {
+        for(int j = i + 1; j < pb->SoLuong; j++) {
+            if(pb->aNhanVien[i].ThamNien > pb->aNhanVien[j].ThamNien) {
+                NhanVien temp = pb->aNhanVien[i];
+                pb->aNhanVien[i] = pb->aNhanVien[j];
+                pb->aNhanVien[j] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    PhongBan pb;
+    int sonam, sonu;
+
+    NhapPhongBan(&pb);
+    XuatPhongBan(pb);
+
+    DemSiSo(pb, &sonam, &sonu);
+    printf("Si so nam: %d, nu: %d\n", sonam, sonu);
+
+    SapXepTangTheoThamNien(&pb);
+    XuatPhongBan(pb);
+
+    return 0;
+}

@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+#define FI "MangSo.inp"
+
+void DocMang2CSoNguyen() {
+    FILE *fi;
+    int n, m;
+
+    fi = fopen(FI, "rt");
+    if (fi == NULL) {
+        printf("Khong the doc file");
+        return;
+    }
+    fscanf(fi, "%d %d", &n, &m);
+    int a[n][m];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            fscanf(fi, "%d", &a[i][j]);
+        }
+    }
+    fclose(fi);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("%d ", a[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    DocMang2CSoNguyen();
+    return 0;
+}

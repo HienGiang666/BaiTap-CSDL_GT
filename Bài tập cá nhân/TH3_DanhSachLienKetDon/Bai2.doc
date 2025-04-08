@@ -1,0 +1,117 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct SinhVien {
+    char hoTen[50];
+    char diaChi[70];
+    char lop[10];
+    int khoa;
+};
+
+struct Node {
+    SinhVien data;
+    Node* next;
+};
+
+class ListSV {
+private:
+    Node* head;
+
+public:
+    ListSV() { head = nullptr; }
+    ~ListSV();
+    void add(SinhVien sv);
+    void removeByName(const char* name);
+    void removeByAddress(const char* address);
+    void appendList(ListSV& other);
+    void sortList(bool (*cmp)(SinhVien, SinhVien));
+    void display();
+};
+
+ListSV::~ListSV() {
+    Node* temp;
+    while (head) {
+        temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+void ListSV::add(SinhVien sv) {
+    Node* newNode = new Node{sv, nullptr};
+    if (!head) {
+        head = newNode;
+    } else {
+        Node* temp = head;
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+void ListSV::removeByName(const char* name) {
+    Node *temp = head, *prev = nullptr;
+    while (temp && strcmp(temp->data.hoTen, name) != 0) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (!temp) return;
+    if (!prev) {
+        head = head->next;
+    } else {
+        prev->next = temp->next;
+    }
+    delete temp;
+}
+
+void ListSV::removeByAddress(const char* address) {
+    Node *temp = head, *prev = nullptr;
+    while (temp && strcmp(temp->data.diaChi, address) != 0) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (!temp) return;
+    if (!prev) {
+        head = head->next;
+    } else {
+        prev->next = temp->next;
+    }
+    delete temp;
+}
+
+void ListSV::display() {
+    Node* temp = head;
+    while (temp) {
+        cout << temp->data.hoTen << ", " << temp->data.diaChi << ", " << temp->data.lop << ", " << temp->data.khoa << endl;
+        temp = temp->next;
+    }
+}
+
+int main() {
+    ListSV danhSach;
+    SinhVien sv;
+    
+    for (int i = 0; i < 10; i++) {
+        cout << "Nhap ho ten: "; cin.ignore(); cin.getline(sv.hoTen, 50);
+        cout << "Nhap dia chi: "; cin.getline(sv.diaChi, 70);
+        cout << "Nhap lop: "; cin.getline(sv.lop, 10);
+        cout << "Nhap khoa: "; cin >> sv.khoa;
+        danhSach.add(sv);
+    }
+    
+    cout << "Danh sach sinh vien:\n";
+    danhSach.display();
+    
+    danhSach.removeByName("Nguyen Van Teo");
+    danhSach.removeByAddress("Nguyen Van Cu");
+    
+    SinhVien mo = {"Tran Thi Mo", "25 Hong Bang", "TT0901", 2009};
+    danhSach.add(mo);
+    
+    cout << "Danh sach sau khi cap nhat:\n";
+    danhSach.display();
+    
+    return 0;
+}

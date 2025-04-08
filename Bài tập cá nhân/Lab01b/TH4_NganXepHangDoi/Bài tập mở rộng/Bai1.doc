@@ -1,0 +1,95 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+// (a) Fibonacci dung de quy
+int FibonacciRec(int n) {
+    if (n <= 1) return n;
+    return FibonacciRec(n - 1) + FibonacciRec(n - 2);
+}
+
+// Fibonacci khong dung de quy (dung stack)
+int FibonacciStack(int n) {
+    if (n <= 1) return n;
+    stack<int> s;
+    s.push(0);
+    s.push(1);
+    for (int i = 2; i <= n; i++) {
+        int a = s.top(); s.pop();
+        int b = s.top();
+        s.push(a);
+        s.push(a + b);
+    }
+    return s.top();
+}
+
+// (b) Dao nguoc so dung de quy
+int ReverseNumberRec(int n, int reversed = 0) {
+    if (n == 0) return reversed;
+    return ReverseNumberRec(n / 10, reversed * 10 + n % 10);
+}
+
+// Dao nguoc so khong dung de quy (dung stack)
+int ReverseNumberStack(int n) {
+    stack<int> s;
+    while (n > 0) {
+        s.push(n % 10);
+        n /= 10;
+    }
+    int reversed = 0;
+    while (!s.empty()) {
+        reversed = reversed * 10 + s.top();
+        s.pop();
+    }
+    return reversed;
+}
+
+// (c) Thap Ha Noi dung de quy
+void HanoiTowerRec(int n, char from, char to, char aux) {
+    if (n == 1) {
+        cout << "Di chuyen dia 1 tu " << from << " den " << to << endl;
+        return;
+    }
+    HanoiTowerRec(n - 1, from, aux, to);
+    cout << "Di chuyen dia " << n << " tu " << from << " den " << to << endl;
+    HanoiTowerRec(n - 1, aux, to, from);
+}
+
+// Thap Ha Noi khong dung de quy (dung stack)
+struct Move {
+    int n;
+    char from, to, aux;
+};
+
+void HanoiTowerStack(int n, char from, char to, char aux) {
+    stack<Move> s;
+    s.push({n, from, to, aux});
+    while (!s.empty()) {
+        Move m = s.top(); s.pop();
+        if (m.n == 1) {
+            cout << "Di chuyen dia 1 tu " << m.from << " den " << m.to << endl;
+        } else {
+            s.push({m.n - 1, m.aux, m.to, m.from});
+            s.push({1, m.from, m.to, m.aux});
+            s.push({m.n - 1, m.from, m.aux, m.to});
+        }
+    }
+}
+
+int main() {
+    int n = 5;
+    cout << "FibonacciRec(" << n << ") = " << FibonacciRec(n) << endl;
+    cout << "FibonacciStack(" << n << ") = " << FibonacciStack(n) << endl;
+
+    int num = 12345;
+    cout << "Dao nguoc Rec(" << num << ") = " << ReverseNumberRec(num) << endl;
+    cout << "Dao nguoc Stack(" << num << ") = " << ReverseNumberStack(num) << endl;
+
+    cout << "\nThap Ha Noi (de quy):\n";
+    HanoiTowerRec(3, 'A', 'C', 'B');
+    
+    cout << "\nThap Ha Noi (khong de quy):\n";
+    HanoiTowerStack(3, 'A', 'C', 'B');
+    
+    return 0;
+}

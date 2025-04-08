@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 1000
+
+void ChenKyTuVaoChuoi(char *s, int k, char c) {
+    int len = strlen(s);
+    if (k < 0 || k > len) {
+        return;
+    }
+    for (int i = len; i >= k; i--) {
+        s[i + 1] = s[i];
+    }
+    s[k] = c;
+}
+
+int main() {
+    char s[MAX + 1];
+    int k;
+    char c;
+
+    printf("Moi ban nhap chuoi s: ");
+    fgets(s, MAX, stdin);
+    s[strcspn(s, "\n")] = '\0';
+
+    printf("Moi ban nhap vi tri can chen: ");
+    scanf("%d", &k);
+    
+    getchar();
+    printf("Moi ban nhap ky tu chen: ");
+    scanf("%c", &c);
+
+    ChenKyTuVaoChuoi(s, k, c);
+
+    printf("Chuoi sau khi chen ky tu '%c' vao vi tri %d: %s\n", c, k, s);
+
+    return 0;
+}

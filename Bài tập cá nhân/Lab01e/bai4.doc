@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+#define FI "CapSo.INP"
+#define FO "CapSo.OUT"
+
+void TimCapSo() {
+    FILE *fi, *fo;
+    int n, k;
+
+    fi = fopen(FI, "rt");
+    if (fi == NULL) {
+        printf("Khong the doc file");
+        return;
+    }
+    fscanf(fi, "%d %d", &n, &k);
+    int a[n];
+    for (int i = 0; i < n; i++) {
+        fscanf(fi, "%d", &a[i]);
+    }
+    fclose(fi);
+
+    fo = fopen(FO, "wt");
+    if (fo == NULL) {
+        printf("Khong the ghi file");
+        return;
+    }
+    int found = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (a[i] + a[j] == k) {
+                fprintf(fo, "%d %d\n", a[i], a[j]);
+                found = 1;
+            }
+        }
+    }
+    if (!found) {
+        fprintf(fo, "0\n");
+    }
+    fclose(fo);
+}
+
+int main() {
+    TimCapSo();
+    return 0;
+}

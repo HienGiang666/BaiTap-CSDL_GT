@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define FI "NT.INP"
+#define FO "NT.OUT"
+
+bool LaSoNguyenTo(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i * i <= num; i++) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}
+
+void TimSoNguyenTo() {
+    FILE *fi, *fo;
+    int n;
+
+    fi = fopen(FI, "rt");
+    if (fi == NULL) {
+        printf("Khong the doc file");
+        return;
+    }
+    fscanf(fi, "%d", &n);
+    int count = 0;
+    int primes[n];
+    for (int i = 0; i < n; i++) {
+        int num;
+        fscanf(fi, "%d", &num);
+        if (LaSoNguyenTo(num)) {
+            primes[count++] = num;
+        }
+    }
+    fclose(fi);
+
+    fo = fopen(FO, "wt");
+    if (fo == NULL) {
+        printf("Khong the ghi file");
+        return;
+    }
+    fprintf(fo, "%d\n", count);
+    for (int i = 0; i < count; i++) {
+        fprintf(fo, "%d ", primes[i]);
+    }
+    fclose(fo);
+}
+
+int main() {
+    TimSoNguyenTo();
+    return 0;
+}

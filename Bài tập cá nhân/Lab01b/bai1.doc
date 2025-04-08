@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <math.h>
+void GiaiPTBacHai(float a, float b, float c, float *x1, float *x2, int *so_nghiem) {
+    float delta = b * b - 4 * a * c;
+    if (delta > 0) {
+        *x1 = (-b + sqrt(delta)) / (2 * a);
+        *x2 = (-b - sqrt(delta)) / (2 * a);
+        *so_nghiem = 2;
+    } else if (delta == 0) {
+        *x1 = *x2 = -b / (2 * a);
+        *so_nghiem = 1;
+    } else {
+        *so_nghiem = 0;
+    }
+}
+int main() {
+    float a, b, c, x1, x2;
+    int so_nghiem;
+    printf("Moi ban nhap he so a, b, c: ");
+    scanf("%f %f %f", &a, &b, &c);
+    GiaiPTBacHai(a, b, c, &x1, &x2, &so_nghiem);
+    if (so_nghiem == 2)
+        printf("Phuong trinh co 2 nghiem: x1 = %.2f, x2 = %.2f\n", x1, x2);
+    else if (so_nghiem == 1)
+        printf("Phuong trinh co nghiem kep: x = %.2f\n", x1);
+    else
+        printf("Phuong trinh vo nghiem.\n");
+    return 0;
+}

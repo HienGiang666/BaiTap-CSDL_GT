@@ -1,0 +1,122 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+// (a) Cai dat QueueInt su dung mang
+class QueueInt {
+private:
+    int* arr;
+    int front, rear, capacity;
+public:
+    QueueInt(int size = 100) {
+        arr = new int[size];
+        capacity = size;
+        front = rear = -1;
+    }
+    ~QueueInt() { delete[] arr; }
+    void PushQueue(int x) {
+        if (IsFull()) return;
+        if (IsEmpty()) front = 0;
+        arr[++rear] = x;
+    }
+    int PopQueue() {
+        if (IsEmpty()) return -1;
+        int value = arr[front++];
+        if (front > rear) front = rear = -1;
+        return value;
+    }
+    int PeekQueue() {
+        if (IsEmpty()) return -1;
+        return arr[front];
+    }
+    bool IsEmpty() { return front == -1; }
+    bool IsFull() { return rear == capacity - 1; }
+    void Clear() { front = rear = -1; }
+};
+
+// (a) Cai dat LinkedQueueInt su dung danh sach lien ket
+struct Node {
+    int data;
+    Node* next;
+    Node(int x) : data(x), next(nullptr) {}
+};
+
+class LinkedQueueInt {
+private:
+    Node *front, *rear;
+public:
+    LinkedQueueInt() : front(nullptr), rear(nullptr) {}
+    ~LinkedQueueInt() { Clear(); }
+    void PushQueue(int x) {
+        Node* newNode = new Node(x);
+        if (IsEmpty()) front = rear = newNode;
+        else {
+            rear->next = newNode;
+            rear = newNode;
+        }
+    }
+    int PopQueue() {
+        if (IsEmpty()) return -1;
+        int value = front->data;
+        Node* temp = front;
+        front = front->next;
+        delete temp;
+        if (!front) rear = nullptr;
+        return value;
+    }
+    int PeekQueue() {
+        if (IsEmpty()) return -1;
+        return front->data;
+    }
+    bool IsEmpty() { return front == nullptr; }
+    void Clear() {
+        while (!IsEmpty()) PopQueue();
+    }
+};
+
+// (b) Xep lich cap mua nam/nữ
+void DancePairing(queue<string>& males, queue<string>& females) {
+    while (!males.empty() && !females.empty()) {
+        cout << males.front() << " - " << females.front() << endl;
+        males.pop(); females.pop();
+    }
+    if (!males.empty()) cout << "Con thieu nu!" << endl;
+    if (!females.empty()) cout << "Con thieu nam!" << endl;
+}
+
+// (c) Radix Sort su dung hang doi
+void RadixSort(vector<int>& arr) {
+    int maxVal = *max_element(arr.begin(), arr.end());
+    int digits = log10(maxVal) + 1;
+    
+    for (int exp = 1; maxVal / exp > 0; exp *= 10) {
+        queue<int> buckets[10];
+        for (int num : arr)
+            buckets[(num / exp) % 10].push(num);
+        
+        int index = 0;
+        for (int i = 0; i < 10; i++) {
+            while (!buckets[i].empty()) {
+                arr[index++] = buckets[i].front();
+                buckets[i].pop();
+            }
+        }
+    }
+}
+
+int main() {
+    queue<string> males, females;
+    males.push("Nam1"); males.push("Nam2"); males.push("Nam3");
+    females.push("Nu1"); females.push("Nu2");
+    cout << "Xep lich cap mua:" << endl;
+    DancePairing(males, females);
+    
+    vector<int> arr = {170, 45, 75, 90, 802, 24, 2, 66};
+    RadixSort(arr);
+    cout << "Sau khi sap xep: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+    return 0;
+}
